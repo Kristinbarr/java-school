@@ -16,21 +16,13 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
-// handles rest exceptions, informing client of something
-// this is a bean, error message will be handled through a controller
-// controllers communicate with client
-// If exception is hit, Spring will look for advice on what to do and find it here
-// all errors return response entities
-
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler
 {
     // no data found at requests endpoint
     @ExceptionHandler({ResourceNotFoundException.class})
-    // banana name method, takes two args
     public ResponseEntity<?> handleResourceNotFoundException(ResourceNotFoundException rnfe, HttpServletRequest request)
     {
-        // standard error detail type class
         ErrorDetail errorDetail = new ErrorDetail();
 
         errorDetail.setTimestamp(new Date().getTime());
@@ -43,6 +35,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(errorDetail, null, HttpStatus.NOT_FOUND);
     }
 
+    // endpoint does not exist
     @Override
     protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request)
     {
@@ -58,7 +51,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(errorDetail, null, HttpStatus.NOT_FOUND);
     }
 
-
+    // endpoint path data type is incorrect ex: int vs string
     @Override
     protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers, HttpStatus status, WebRequest request)
     {
