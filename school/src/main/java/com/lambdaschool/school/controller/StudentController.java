@@ -19,8 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/students")
-public class StudentController
-{
+public class StudentController {
     // line added for logging from sfl4j
     private static final Logger logger = LoggerFactory.getLogger(StudentController.class);
 
@@ -31,43 +30,41 @@ public class StudentController
 
     @GetMapping(value = "/students", produces = {"application/json"})
     public ResponseEntity<?> listAllStudents(HttpServletRequest request) {
-
         // add for logging. add a log for any error level that might be hit
         logger.trace("accessed at trace level");
         logger.debug("accessed at debug level");
-        logger.info(request.getMethod().toUpperCase() + " " + request.getRequestURI() + "accessed at info level");
+        logger.info(request.getMethod().toUpperCase() + " " + request.getRequestURI() + " accessed");
         List<Student> myStudents = studentService.findAll();
         return new ResponseEntity<>(myStudents, HttpStatus.OK);
     }
 
     @GetMapping(value = "/student/{studentid}",
-                produces = {"application/json"})
-    public ResponseEntity<?> getStudentById(
-            @PathVariable Long studentid) {
+            produces = {"application/json"})
+    public ResponseEntity<?> getStudentById(@PathVariable Long studentid, HttpServletRequest request) {
+        logger.info(request.getMethod().toUpperCase() + " " + request.getRequestURI() + " accessed");
         Student r = studentService.findStudentById(studentid);
         return new ResponseEntity<>(r, HttpStatus.OK);
     }
 
 
     @GetMapping(value = "/student/namelike/{name}",
-                produces = {"application/json"})
-    public ResponseEntity<?> getStudentByNameContaining(
-            @PathVariable String name)
-    {
+            produces = {"application/json"})
+    public ResponseEntity<?> getStudentByNameContaining(@PathVariable String name, HttpServletRequest request) {
+        logger.info(request.getMethod().toUpperCase() + " " + request.getRequestURI() + " accessed");
         List<Student> myStudents = studentService.findStudentByNameLike(name);
         return new ResponseEntity<>(myStudents, HttpStatus.OK);
     }
 
 
     @PostMapping(value = "/student",
-                 consumes = {"application/json"},
-                 produces = {"application/json"})
+            consumes = {"application/json"},
+            produces = {"application/json"})
     public ResponseEntity<?> addNewStudent(@Valid
-                                           @RequestBody
-                                                   Student newStudent) throws URISyntaxException
-    {
-        newStudent = studentService.save(newStudent);
+                                           @RequestBody Student newStudent, HttpServletRequest request) throws URISyntaxException {
 
+        logger.info(request.getMethod().toUpperCase() + " " + request.getRequestURI() + " accessed");
+
+        newStudent = studentService.save(newStudent);
         // set the location header for the newly created resource
         HttpHeaders responseHeaders = new HttpHeaders();
         URI newStudentURI = ServletUriComponentsBuilder.fromCurrentRequest().path("/{Studentid}").buildAndExpand(newStudent.getStudid()).toUri();
@@ -79,21 +76,19 @@ public class StudentController
 
     @PutMapping(value = "/student/{studentid}")
     public ResponseEntity<?> updateStudent(
-            @RequestBody
-                    Student updateStudent,
-            @PathVariable
-                    long studentid)
-    {
+            @RequestBody Student updateStudent,
+            @PathVariable long studentid, HttpServletRequest request) {
+        logger.info(request.getMethod().toUpperCase() + " " + request.getRequestURI() + " accessed");
         studentService.update(updateStudent, studentid);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
-    @DeleteMapping("/Student/{Studentid}")
+    @DeleteMapping("/student/{studentid}")
     public ResponseEntity<?> deleteStudentById(
-            @PathVariable
-                    long Studentid)
-    {
+            @PathVariable long Studentid, HttpServletRequest request) {
+        logger.info(request.getMethod().toUpperCase() + " " + request.getRequestURI() + " accessed");
+
         studentService.delete(Studentid);
         return new ResponseEntity<>(HttpStatus.OK);
     }

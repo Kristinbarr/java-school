@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+// sets the format for our own exception handling fields
+// we might get a list of validation errors so a ValidationError file is also created
+
 public class ErrorDetail
 {
     private String title;

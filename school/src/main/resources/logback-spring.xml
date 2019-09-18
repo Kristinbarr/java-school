@@ -46,7 +46,7 @@
     </appender>
 
 
-    <root level="TRACE" additivity="false">
+    <root level="OFF" additivity="false">
         <appender-ref ref = "STDOUT"/>
         <appender-ref ref = "FILE"/>
     </root>
